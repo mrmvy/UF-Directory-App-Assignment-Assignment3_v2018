@@ -10,6 +10,7 @@ var fs = require('fs'),
     config = require('./config');
 
 /* Connect to your database using mongoose - remember to keep your key secret*/
+mongoose.connect(config.db.uri);
 
 /* 
   Instantiate a mongoose model for each listing object in the JSON file, 
@@ -17,7 +18,18 @@ var fs = require('fs'),
 
   Remember that we need to read in a file like we did in Bootcamp Assignment #1.
  */
+var allListings = JSON.parse(fs.readFileSync('./listings.json', 'utf8'));
 
+for (var i = 0, len = allListings.entries.length; i < len; i++) {
+  var l = new Listing(allListings.entries[i]);
+
+  console.log('Saving listing for: ' + l.code + ' ' + l.name);
+
+  l.save(function(err) {
+    if (err) throw err;
+    console.log('Listing saved successfully.');
+  });
+}
 
 /*  
   Check to see if it works: Once you've written + run the script, check out your MongoLab database to ensure that 

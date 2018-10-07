@@ -8,6 +8,15 @@ var mongoose = require('mongoose'),
   */
 var listingSchema = new Schema({
   /* Your code here */ 
+  code: { type: String, required: true, unique: true },
+  name: { type: String, required: true }, 
+  address: String,
+  coordinates: {
+    latitude: Number,
+    longitude: Number
+  },
+  created_at: Date,
+  updated_at: Date
 });
 
 /* Create a 'pre' function that adds the updated_at (and created_at if not already there) property 
@@ -15,6 +24,11 @@ var listingSchema = new Schema({
 */
 listingSchema.pre('save', function(next) {
   /* your code here */
+  var today = new Date();
+  this.updated_at = today;
+  if (!this.created_at)
+    this.created_at = today;
+  next();
 });
 
 /* Use your schema to instantiate a Mongoose model */
